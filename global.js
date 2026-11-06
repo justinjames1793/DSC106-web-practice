@@ -12,6 +12,7 @@ function $$(selector, context = document) {
 let pages = [
   { url: '', title: 'Home' },
   { url: 'projects/', title: 'Projects' },
+  { url: 'meta/', title: 'Meta' },        // ← add this
   { url: 'contact/', title: 'Contact' },
   { url: 'resume/', title: 'Resume' },
   { url: 'https://github.com/justinjames1793', title: 'GitHub' },
@@ -19,10 +20,10 @@ let pages = [
 
 // Where the site's root is, depending on where it's running:
 // - Locally (Live Server), the site sits at the server root → "/"
-// - On GitHub Pages, it lives under the repo name → "/Personal-Site-and-Portfolio/"
+// - On GitHub Pages, it lives under the repo name → "/DSC106-web-practice/"
 const BASE_PATH = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
   ? "/"                               // Local server
-  : "/Personal-Site-and-Portfolio/";  // GitHub Pages repo name
+  : "/DSC106-web-practice/";  // GitHub Pages repo name
 
 // Create an empty <nav> and put it at the very top of <body>
 let nav = document.createElement('nav');
