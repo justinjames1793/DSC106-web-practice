@@ -274,23 +274,117 @@ form button {
   }
 }
 
-/* ===== GitHub stats (home page) ===== */
-#profile-stats dl {
+/* ===== Stats lists (GitHub stats on home page, code stats on meta page) ===== */
+#profile-stats dl,
+dl.stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);  /* four equal columns */
+  grid-auto-columns: 1fr;      /* one equal column per stat, however many there are */
   text-align: center;
 }
 
-#profile-stats dt {
+#profile-stats dt,
+dl.stats dt {
   grid-row: 1;                 /* all labels on the top row */
   font-size: 80%;
   text-transform: uppercase;
   opacity: 0.7;                /* muted; works in light and dark mode */
 }
 
-#profile-stats dd {
+#profile-stats dd,
+dl.stats dd {
   grid-row: 2;                 /* all numbers on the bottom row */
   margin: 0;                   /* browsers indent <dd> by default */
   font-size: 200%;
   font-weight: bold;
+}
+
+/* ===== Meta page scatterplot ===== */
+/* Gridlines: faint so they help reading the chart without competing with the dots */
+#chart .gridlines .tick line {
+  stroke-opacity: 0.3;
+}
+
+/* Hide the gridline axis's own vertical line (the axis on the left already draws it) */
+#chart .gridlines .domain {
+  display: none;
+}
+
+/* Dots grow smoothly on hover */
+#chart circle {
+  transition: 200ms;
+  transform-origin: center;    /* scale from the dot's center... */
+  transform-box: fill-box;     /* ...measured on the dot itself, not the whole SVG */
+}
+
+#chart circle:hover {
+  transform: scale(1.5);
+}
+
+/* ===== Info lists: labels in column 1, values in column 2 ===== */
+dl.info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25em 1em;
+  margin: 0;
+
+  /* Fade in/out instead of popping */
+  transition-duration: 500ms;
+  transition-property: opacity, visibility;
+}
+
+/* Hidden = faded out, unless the mouse is on it or something inside it has focus
+   (so you can still move onto the tooltip and click the commit link) */
+dl.info[hidden]:not(:hover, :focus-within) {
+  opacity: 0;
+  visibility: hidden;
+}
+
+dl.info dt {
+  grid-column: 1;
+  margin: 0;
+  opacity: 0.6;                /* labels quieter than the values */
+}
+
+dl.info dd {
+  grid-column: 2;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ===== Tooltips: pinned to the top-left of the viewport for now ===== */
+.tooltip {
+  position: fixed;
+  top: 1em;
+  left: 1em;
+
+  /* Look: a frosted card floating just above the page */
+  background-color: color-mix(in oklch, canvas, transparent 15%);  /* page color, slightly see-through; works in light and dark */
+  backdrop-filter: blur(6px);                                      /* blur what's behind it (frosted glass) */
+  border: 1px solid color-mix(in oklch, canvastext, canvas 85%);  /* faint edge */
+  border-radius: 0.5em;
+  box-shadow: 0 2px 8px oklch(0% 0 0 / 15%);                       /* subtle lift */
+  padding: 0.6em 0.9em;
+  font-size: 90%;
+  z-index: 10;                                                     /* stay above the chart */
+}
+
+
+/* Brush selection rectangle: faint fill with a "marching ants" dashed border */
+@keyframes marching-ants {
+  to {
+    stroke-dashoffset: -8; /* one full dash + gap (5 + 3), so the loop is seamless */
+  }
+}
+
+#chart .selection {
+  fill-opacity: 0.1;
+  stroke: canvastext;          /* black in light mode, white in dark mode */
+  stroke-opacity: 0.7;
+  stroke-dasharray: 5 3;       /* 5px dash, 3px gap */
+  animation: marching-ants 2s linear infinite;
+}
+
+/* Dots inside the brush selection */
+#chart circle.selected {
+  fill: #ff6b6b;
 }
