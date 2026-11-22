@@ -311,9 +311,16 @@ dl.stats dd {
 
 /* Dots grow smoothly on hover */
 #chart circle {
-  transition: 200ms;
+  /* Everything transitions in 200ms, except radius: duration scales with the dot's
+     size (--r, set in main.js), so big and small dots grow at the same speed. */
+  transition: all 200ms, r calc(var(--r) * 100ms);
   transform-origin: center;    /* scale from the dot's center... */
   transform-box: fill-box;     /* ...measured on the dot itself, not the whole SVG */
+
+  /* New dots start at radius 0 and grow in (CSS needs a start state to transition from) */
+  @starting-style {
+    r: 0;
+  }
 }
 
 #chart circle:hover {
@@ -387,4 +394,93 @@ dl.info dd {
 /* Dots inside the brush selection */
 #chart circle.selected {
   fill: #ff6b6b;
+}
+
+/* ===== Meta page: files unit visualization (Lab 8, Step 2) ===== */
+#files {
+  display: grid;
+  grid-template-columns: 1fr 4fr;   /* file name | its dots */
+
+  /* Each file's <div> spans both columns and reuses the parent's columns (subgrid),
+     so every name and every row of dots lines up across files */
+  > div {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  dt {
+    grid-column: 1;
+  }
+
+  /* Line count under the file name: own line, smaller, muted */
+  small {
+    display: block;
+    font-size: 75%;
+    opacity: 0.7;
+  }
+
+  /* Dots wrap and pack tightly */
+  dd {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    align-content: start;
+    gap: 0.15em;
+    padding-top: 0.6em;
+    margin-left: 0;
+  }
+}
+
+/* One dot = one line of code, colored by technology (--color set in main.js) */
+.loc {
+  display: flex;
+  width: 0.5em;
+  aspect-ratio: 1;
+  background: var(--color);
+  border-radius: 50%;
+}
+
+/* ===== Meta page: scrollytelling (Lab 8, Steps 3 & 4) ===== */
+/* Two columns: story on the left, sticky vis on the right (Step 3.1) */
+#scrolly-1,
+#scrolly-2 {
+  position: relative;
+  display: flex;
+  gap: 1rem;
+
+  > * {
+    flex: 1;
+  }
+
+  /* Bigger graph: let these sections run wider than the 100ch page column
+     (up to 140ch, or the window width minus a margin), still centered */
+  --scrolly-width: min(140ch, 100vw - 4rem);
+  width: var(--scrolly-width);
+  margin-left: calc(50% - var(--scrolly-width) / 2);
+}
+
+#scatter-story,
+#files-story {
+  position: relative;
+}
+
+/* The height is required, or position: sticky has no effect */
+#scatter-plot,
+#files-plot {
+  position: sticky;
+  top: 0;
+  left: 0;
+  bottom: auto;
+  height: 50vh;
+
+  /* Bigger graph: the vis gets 2 parts of the width, the story 1 */
+  flex: 2;
+}
+
+/* Space the commit descriptions out (Step 3.2) */
+#scatter-story .step,
+#files-story .step {
+  padding-bottom: 20vh;
 }

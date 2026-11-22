@@ -15,10 +15,17 @@
     <div id="stats"></div>
 
     <h2>Commits by time of day</h2>
-    <div id="chart"></div>
+    <!-- Scrollytelling (Lab 8, Step 3): story text on the left, sticky chart on the right.
+         The .step divs in #scatter-story are generated in main.js, one per commit. -->
+    <div id="scrolly-1">
+      <div id="scatter-story"></div>
+      <div id="scatter-plot">
+        <div id="chart"></div>
 
-    <p id="selection-count">No commits selected</p>
-    <dl id="language-breakdown" class="stats"></dl>
+        <p id="selection-count">No commits selected</p>
+        <dl id="language-breakdown" class="stats"></dl>
+      </div>
+    </div>
 
     <!-- Info about the hovered commit (filled in by renderTooltipContent in main.js) -->
     <dl id="commit-tooltip" class="info tooltip" hidden>
@@ -39,5 +46,17 @@
       <dt>Lines edited</dt>
       <dd id="commit-lines"></dd>
     </dl>
+
+    <!-- Scrollytelling part 2 (Lab 8, Step 4): same layout as the scatter plot's,
+         story on the left and the file-size dots on the right. -->
+    <div id="scrolly-2">
+      <div id="files-story"></div>
+      <div id="files-plot">
+        <!-- Unit vis: one dot per line of code, grouped by file (Lab 8, Step 2).
+             Filled in by updateFileDisplay() in main.js. Each file becomes:
+             <div><dt><code>name</code><small>N lines</small></dt><dd><div class="loc"></div>...</dd></div> -->
+        <dl id="files"></dl>
+      </div>
+    </div>
 </body>
 </html>
